@@ -5,49 +5,76 @@
   <meta charset="UTF-8">
   <meta name="viewport"
         content="width=device-width, initial-scale=1.0">
-
   <title>Coral Explorer</title>
 
   <style>
     body {
+      margin: 0;
+      padding: 40px 20px;
       background: #e8f7fa;
       color: #164b60;
       font-family: Arial, sans-serif;
       text-align: center;
-      padding: 40px 20px;
     }
 
-    .coral-image {
-      width: 100%;
-      max-width: 350px;
-      border-radius: 15px;
+    .coral-gallery {
+      display: flex;
+      justify-content: center;
+      flex-wrap: wrap;
+      gap: 20px;
+      margin: 30px auto;
+      max-width: 800px;
+    }
+
+    .coral-card {
+      width: 280px;
+      padding: 12px;
+      background: white;
+      border: 1px solid #c4e5eb;
+      border-radius: 16px;
+      color: #164b60;
       cursor: pointer;
+      font: inherit;
     }
 
-    /* 彈出視窗的背景 */
+    .coral-card img {
+      width: 100%;
+      height: 190px;
+      object-fit: cover;
+      border-radius: 10px;
+    }
+
+    .coral-card:hover {
+      transform: translateY(-4px);
+    }
+
     .modal {
       display: none;
       position: fixed;
       inset: 0;
-      background: rgba(0, 0, 0, 0.6);
+      background: rgba(0, 0, 0, 0.65);
       justify-content: center;
       align-items: center;
       padding: 20px;
+      box-sizing: border-box;
     }
 
-    /* 彈出視窗的內容 */
     .modal-content {
       background: white;
       padding: 25px;
-      border-radius: 15px;
-      max-width: 400px;
+      border-radius: 16px;
+      max-width: 420px;
+      width: 100%;
+      max-height: 80vh;
+      overflow-y: auto;
+      text-align: left;
     }
 
-    button {
+    .close-button {
       background: #168b9b;
       color: white;
       border: none;
-      padding: 12px 24px;
+      padding: 12px 20px;
       border-radius: 10px;
       cursor: pointer;
     }
@@ -57,57 +84,105 @@
 <body>
   <h1>Coral Explorer 🪸</h1>
   <h2>探索香港的珊瑚世界</h2>
-  <p>點擊下方珊瑚圖片，了解更多！</p>
+  <p>點擊珊瑚圖片，了解不同的生長形態！</p>
 
-  <!-- 珊瑚圖片 -->
-  <img
-    class="coral-image"
-    src="https://upload.wikimedia.org/wikipedia/commons/1/19/Branching_Acropora.jpg"
-    alt="分枝形鹿角珊瑚"
-    onclick="openModal()"
-  >
+  <!-- 珊瑚圖片區 -->
+  <div class="coral-gallery">
 
-  <p>鹿角珊瑚（Acropora）</p>
+    <button class="coral-card"
+            onclick="openModal('acropora')">
+      <img
+        src="https://commons.wikimedia.org/wiki/Special:FilePath/Branching_Acropora.jpg"
+        alt="分枝形鹿角珊瑚">
+      <h3>鹿角珊瑚</h3>
+      <p>分枝形態</p>
+    </button>
 
-  <small>
-    Photo: Akram AB /
-    <a href="https://commons.wikimedia.org/wiki/File:Branching_Acropora.jpg">
-      Wikimedia Commons
-    </a>
-    / CC BY-SA 4.0
-  </small>
+    <button class="coral-card"
+            onclick="openModal('porites')">
+      <img
+        src="https://commons.wikimedia.org/wiki/Special:FilePath/Porites_lutea.jpg"
+        alt="團塊形濱珊瑚">
+      <h3>濱珊瑚</h3>
+      <p>團塊形態</p>
+    </button>
 
-  <!-- 彈出資訊視窗 -->
-  <div id="coralModal" class="modal">
+  </div>
+
+  <!-- 所有珊瑚共用一個資訊視窗 -->
+  <div id="coralModal"
+       class="modal"
+       role="dialog"
+       aria-modal="true"
+       aria-labelledby="modalTitle">
+
     <div class="modal-content">
-      <h2>鹿角珊瑚</h2>
+      <h2 id="modalTitle"></h2>
+      <p id="modalDescription"></p>
+      <p id="modalCredit"></p>
 
-      <p>
-        鹿角珊瑚是一類造礁石珊瑚，
-        部分種類具有分枝狀的生長形態。
-      </p>
-
-      <p>
-        珊瑚的立體結構能為魚類及其他
-        海洋生物提供棲息空間。
-      </p>
-
-      <button onclick="closeModal()">
+      <button class="close-button"
+              onclick="closeModal()">
         關閉介紹
       </button>
     </div>
+
   </div>
 
   <script>
-    function openModal() {
+    // 1. 儲存不同珊瑚的資料
+    const coralData = {
+      acropora: {
+        name: "鹿角珊瑚（Acropora）",
+        description:
+          "鹿角珊瑚屬包含許多造礁石珊瑚，" +
+          "部分種類具有分枝形態，" +
+          "能為小型魚類提供躲藏空間。",
+        credit: "照片：Akram AB / Wikimedia Commons / CC BY-SA 4.0"
+      },
+
+      porites: {
+        name: "濱珊瑚（Porites lutea）",
+        description:
+          "這種濱珊瑚常形成大型團塊狀群體，" +
+          "生長相對緩慢，" +
+          "能夠形成持續多年的珊瑚結構。",
+        credit: "照片：Philippe Bourjon / Wikimedia Commons / CC BY-SA 3.0"
+      }
+    };
+
+    // 2. 開啟共用資訊視窗
+    function openModal(coralId) {
+      const coral = coralData[coralId];
+      if (!coral) return;
+
+      document.getElementById("modalTitle")
+        .textContent = coral.name;
+
+      document.getElementById("modalDescription")
+        .textContent = coral.description;
+
+      document.getElementById("modalCredit")
+        .textContent = coral.credit;
+
       document.getElementById("coralModal")
         .style.display = "flex";
+
+      document.querySelector(".close-button").focus();
     }
 
+    // 3. 關閉共用資訊視窗
     function closeModal() {
       document.getElementById("coralModal")
         .style.display = "none";
     }
+
+    // 4. 按 Escape 鍵也可以關閉視窗
+    document.addEventListener("keydown", function(event) {
+      if (event.key === "Escape") {
+        closeModal();
+      }
+    });
   </script>
 </body>
 </html>
