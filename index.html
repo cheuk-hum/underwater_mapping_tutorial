@@ -3,46 +3,110 @@
 <html lang="zh-Hant">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="viewport"
+        content="width=device-width, initial-scale=1.0">
+
   <title>Coral Explorer</title>
+
   <style>
     body {
       background: #e8f7fa;
       color: #164b60;
       font-family: Arial, sans-serif;
       text-align: center;
-      padding: 60px 20px;
+      padding: 40px 20px;
     }
 
-    h1 {
-      font-size: 40px;
+    .coral-image {
+      width: 100%;
+      max-width: 350px;
+      border-radius: 15px;
+      cursor: pointer;
+    }
+
+    /* 彈出視窗的背景 */
+    .modal {
+      display: none;
+      position: fixed;
+      inset: 0;
+      background: rgba(0, 0, 0, 0.6);
+      justify-content: center;
+      align-items: center;
+      padding: 20px;
+    }
+
+    /* 彈出視窗的內容 */
+    .modal-content {
+      background: white;
+      padding: 25px;
+      border-radius: 15px;
+      max-width: 400px;
     }
 
     button {
       background: #168b9b;
       color: white;
       border: none;
-      padding: 14px 24px;
-      border-radius: 12px;
+      padding: 12px 24px;
+      border-radius: 10px;
       cursor: pointer;
     }
   </style>
 </head>
+
 <body>
-  
-<h1>Coral Explorer 🪸</h1>
-<h2>探索香港的珊瑚世界</h2>
+  <h1>Coral Explorer 🪸</h1>
+  <h2>探索香港的珊瑚世界</h2>
+  <p>點擊下方珊瑚圖片，了解更多！</p>
 
+  <!-- 珊瑚圖片 -->
+  <img
+    class="coral-image"
+    src="https://upload.wikimedia.org/wikipedia/commons/1/19/Branching_Acropora.jpg"
+    alt="分枝形鹿角珊瑚"
+    onclick="openModal()"
+  >
 
-  <p>一起探索奇妙的珊瑚世界！</p>
+  <p>鹿角珊瑚（Acropora）</p>
 
-  <button onclick="showMessage()">
-    探索珊瑚
-  </button>
+  <small>
+    Photo: Akram AB /
+    <a href="https://commons.wikimedia.org/wiki/File:Branching_Acropora.jpg">
+      Wikimedia Commons
+    </a>
+    / CC BY-SA 4.0
+  </small>
+
+  <!-- 彈出資訊視窗 -->
+  <div id="coralModal" class="modal">
+    <div class="modal-content">
+      <h2>鹿角珊瑚</h2>
+
+      <p>
+        鹿角珊瑚是一類造礁石珊瑚，
+        部分種類具有分枝狀的生長形態。
+      </p>
+
+      <p>
+        珊瑚的立體結構能為魚類及其他
+        海洋生物提供棲息空間。
+      </p>
+
+      <button onclick="closeModal()">
+        關閉介紹
+      </button>
+    </div>
+  </div>
 
   <script>
-    function showMessage() {
-      alert("歡迎來到珊瑚世界！");
+    function openModal() {
+      document.getElementById("coralModal")
+        .style.display = "flex";
+    }
+
+    function closeModal() {
+      document.getElementById("coralModal")
+        .style.display = "none";
     }
   </script>
 </body>
